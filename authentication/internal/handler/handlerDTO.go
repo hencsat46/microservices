@@ -1,14 +1,9 @@
-package models
+package handler
 
-type User struct {
+type userDTO struct {
 	Username string `json:"Username"`
 	Password string `json:"Password"`
 	Name     string `json:"Name"`
 	Surname  string `json:"Surname"`
 	Id       int    `json:"Id"`
-}
-
-type Response struct {
-	Status  int
-	Payload interface{}
 }
