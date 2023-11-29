@@ -1,6 +1,6 @@
 package repostitory
 
-type mockUsers struct {
+type MockUsers struct {
 	Name     string
 	Surname  string
 	Username string

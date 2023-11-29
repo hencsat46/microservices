@@ -3,7 +3,7 @@ package main
 import (
 	"microservices/authentication/internal/controller"
 	"microservices/authentication/internal/handler"
-	"microservices/authentication/internal/repostitory"
+	repostitory "microservices/authentication/internal/repository"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

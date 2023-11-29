@@ -8,17 +8,17 @@ import (
 
 type repo struct {
 	sync.RWMutex
-	database map[int]mockUsers
+	database map[int]MockUsers
 }
 
 func NewRepository() controller.RepositoryInterfaces {
-	return &repo{database: make(map[int]mockUsers)}
+	return &repo{database: make(map[int]MockUsers)}
 }
 
 func (r *repo) Create(user models.User, id int) error {
 	r.Lock()
 	defer r.Unlock()
-	u := mockUsers{user.Name, user.Surname, user.Username, user.Password}
+	u := MockUsers{user.Name, user.Surname, user.Username, user.Password}
 	r.database[id] = u
 	return nil
 }
@@ -41,7 +41,7 @@ func (r *repo) Update(user models.User, id int) error {
 	if !ok {
 		return nil
 	}
-	r.database[id] = mockUsers{Name: user.Name, Surname: user.Surname, Username: user.Username, Password: user.Password}
+	r.database[id] = MockUsers{Name: user.Name, Surname: user.Surname, Username: user.Username, Password: user.Password}
 	return nil
 }
 
