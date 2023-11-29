@@ -13,16 +13,16 @@ type handler struct {
 
 type UsecaseInterfaces interface {
 	Create(models.User, int) error
-	Read(models.User, int) (models.User, error)
+	Read(int) (models.User, error)
 	Update(models.User, int) error
-	Delete(models.User, int) error
+	Delete(int) error
 }
 
 func NewHandler(usecase UsecaseInterfaces) *handler {
 	return &handler{usecase: usecase}
 }
 
-func (h *handler) Routes(e echo.Echo) {
+func (h *handler) Routes(e *echo.Echo) {
 	e.POST("/create", h.Create)
 	e.GET("/get", h.Read)
 	e.PUT("/update", h.Update)
@@ -51,7 +51,7 @@ func (h *handler) Read(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, &models.Response{Status: http.StatusBadRequest, Payload: "Bad json"})
 	}
 
-	response, err := h.usecase.Read(models.User{Username: user.Username, Password: user.Password, Name: user.Name, Surname: user.Surname}, user.Id)
+	response, err := h.usecase.Read(user.Id)
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, &models.Response{Status: http.StatusInternalServerError, Payload: "Internal Server Error"})
@@ -82,7 +82,7 @@ func (h *handler) Delete(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, &models.Response{Status: http.StatusBadRequest, Payload: "Bad json"})
 	}
 
-	if err := h.usecase.Delete(models.User{Username: user.Username, Password: user.Password, Name: user.Name, Surname: user.Surname}, user.Id); err != nil {
+	if err := h.usecase.Delete(user.Id); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, &models.Response{Status: http.StatusInternalServerError, Payload: "Internal Server Error"})
 	}
 

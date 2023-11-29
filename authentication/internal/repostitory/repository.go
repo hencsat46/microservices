@@ -23,7 +23,7 @@ func (r *repo) Create(user models.User, id int) error {
 	return nil
 }
 
-func (r *repo) Read(user models.User, id int) (models.User, error) {
+func (r *repo) Read(id int) (models.User, error) {
 	r.RLock()
 	defer r.RUnlock()
 	value, ok := r.database[id]
@@ -31,21 +31,21 @@ func (r *repo) Read(user models.User, id int) (models.User, error) {
 		return models.User{}, nil
 	}
 
-	return models.User{Name: value.Name, Surname: value.Surname, Username: value.Username, Password: ""}, nil
+	return models.User{Name: value.Name, Surname: value.Surname, Username: value.Username, Password: "", Id: id}, nil
 }
 
 func (r *repo) Update(user models.User, id int) error {
 	r.Lock()
 	defer r.Unlock()
-	value, ok := r.database[id]
+	_, ok := r.database[id]
 	if !ok {
 		return nil
 	}
-	r.database[id] = value
+	r.database[id] = mockUsers{Name: user.Name, Surname: user.Surname, Username: user.Username, Password: user.Password}
 	return nil
 }
 
-func (r *repo) Delete(user models.User, id int) error {
+func (r *repo) Delete(id int) error {
 	r.Lock()
 	defer r.Unlock()
 	_, ok := r.database[id]

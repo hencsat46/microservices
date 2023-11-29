@@ -12,9 +12,9 @@ type controller struct {
 
 type RepositoryInterfaces interface {
 	Create(models.User, int) error
-	Read(models.User, int) (models.User, error)
+	Read(int) (models.User, error)
 	Update(models.User, int) error
-	Delete(models.User, int) error
+	Delete(int) error
 }
 
 func NewUsecase(repo RepositoryInterfaces) handler.UsecaseInterfaces {
@@ -22,7 +22,7 @@ func NewUsecase(repo RepositoryInterfaces) handler.UsecaseInterfaces {
 }
 
 func (c *controller) Create(user models.User, id int) error {
-	err := c.Create(user, id)
+	err := c.repo.Create(user, id)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -30,8 +30,8 @@ func (c *controller) Create(user models.User, id int) error {
 	return nil
 }
 
-func (c *controller) Read(user models.User, id int) (models.User, error) {
-	data, err := c.Read(user, id)
+func (c *controller) Read(id int) (models.User, error) {
+	data, err := c.repo.Read(id)
 	if err != nil {
 		log.Println(err)
 		return models.User{}, nil
@@ -40,7 +40,7 @@ func (c *controller) Read(user models.User, id int) (models.User, error) {
 }
 
 func (c *controller) Update(user models.User, id int) error {
-	err := c.Update(user, id)
+	err := c.repo.Update(user, id)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -48,8 +48,8 @@ func (c *controller) Update(user models.User, id int) error {
 	return nil
 }
 
-func (c *controller) Delete(user models.User, id int) error {
-	err := c.Delete(user, id)
+func (c *controller) Delete(id int) error {
+	err := c.repo.Delete(id)
 	if err != nil {
 		log.Println(err)
 		return err
