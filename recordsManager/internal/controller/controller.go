@@ -44,10 +44,26 @@ func (u *usecase) ReadUser(id int) (*models.User, error) {
 }
 
 func (u *usecase) UpdateUser(user models.User) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err := u.gateway.UpdateUser(ctx, user)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	return nil
 }
 
 func (u *usecase) DeleteUser(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := u.gateway.DeleteUser(ctx, id); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -78,9 +94,25 @@ func (u *usecase) ReadRecord(id int) (*models.RecordModel, error) {
 }
 
 func (u *usecase) UpdateRecord(record models.RecordModel) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err := u.gateway.UpdateRecord(ctx, record)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	return nil
 }
 
 func (u *usecase) DeleteRecord(id int) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := u.gateway.DeleteRecord(ctx, id); err != nil {
+		return err
+	}
+
 	return nil
 }

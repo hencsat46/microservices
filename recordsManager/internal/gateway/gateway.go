@@ -84,10 +84,67 @@ func (g *Gateway) ReadUser(ctx context.Context, id int) (*models.User, error) {
 }
 
 func (g *Gateway) UpdateUser(ctx context.Context, user models.User) error {
+	body, err := json.Marshal(user)
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequest(http.MethodPut, "http://localhost:3000/update", bytes.NewBuffer(body))
+
+	if err != nil {
+		return err
+	}
+
+	request = request.WithContext(ctx)
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		return err
+	}
+
+	var responseModel models.Response
+
+	if err := json.NewDecoder(response.Body).Decode(&responseModel); err != nil {
+		return err
+	}
+	log.Println(response)
+	log.Println(responseModel)
+
 	return nil
 }
 
 func (g *Gateway) DeleteUser(ctx context.Context, id int) error {
+	body, err := json.Marshal(models.User{Id: id})
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	request, err := http.NewRequest(http.MethodDelete, "http://localhost:3000/delete", bytes.NewBuffer(body))
+
+	if err != nil {
+		return err
+	}
+
+	request = request.WithContext(ctx)
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		return err
+	}
+
+	var responseModel models.Response
+
+	if err := json.NewDecoder(response.Body).Decode(&responseModel); err != nil {
+		return err
+	}
+	log.Println(response)
+	log.Println(responseModel)
+
 	return nil
 }
 
@@ -156,10 +213,66 @@ func (g *Gateway) ReadRecord(ctx context.Context, id int) (*models.RecordModel, 
 	return &models.RecordModel{UserId: int(typeMap["UserId"].(float64)), RecordId: int(typeMap["RecordId"].(float64))}, nil
 }
 
-func (g *Gateway) UpdateRecord(ctx context.Context, user models.RecordModel) error {
+func (g *Gateway) UpdateRecord(ctx context.Context, record models.RecordModel) error {
+	body, err := json.Marshal(record)
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequest(http.MethodPut, "http://localhost:3001/update", bytes.NewBuffer(body))
+
+	if err != nil {
+		return err
+	}
+
+	request = request.WithContext(ctx)
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		return err
+	}
+
+	var responseModel models.Response
+
+	if err := json.NewDecoder(response.Body).Decode(&responseModel); err != nil {
+		return err
+	}
+	log.Println(response)
+	log.Println(responseModel)
+
 	return nil
 }
 
 func (g *Gateway) DeleteRecord(ctx context.Context, id int) error {
+	body, err := json.Marshal(models.RecordModel{UserId: id})
+	if err != nil {
+		return err
+	}
+
+	request, err := http.NewRequest(http.MethodDelete, "http://localhost:3001/delete", bytes.NewBuffer(body))
+
+	if err != nil {
+		return err
+	}
+
+	request = request.WithContext(ctx)
+	request.Header.Set("Content-Type", "application/json")
+
+	response, err := http.DefaultClient.Do(request)
+
+	if err != nil {
+		return err
+	}
+
+	var responseModel models.Response
+
+	if err := json.NewDecoder(response.Body).Decode(&responseModel); err != nil {
+		return err
+	}
+	log.Println(response)
+	log.Println(responseModel)
+
 	return nil
 }
