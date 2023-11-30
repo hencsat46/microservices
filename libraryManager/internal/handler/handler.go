@@ -13,9 +13,9 @@ type handler struct {
 }
 
 type UsecaseInterfaces interface {
-	Create(models.RecordModel, int) error
+	Create(models.RecordModel) error
 	Read(int) (models.RecordModel, error)
-	Update(models.RecordModel, int) error
+	Update(models.RecordModel) error
 	Delete(int) error
 }
 
@@ -38,7 +38,7 @@ func (h *handler) Create(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, &models.Response{Status: http.StatusBadRequest, Payload: "Bad json"})
 	}
 
-	if err := h.usecase.Create(models.RecordModel{UserId: user.UserId, RecordId: user.RecordId}, user.UserId); err != nil {
+	if err := h.usecase.Create(models.RecordModel{UserId: user.UserId, RecordId: user.RecordId}); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, &models.Response{Status: http.StatusInternalServerError, Payload: "Internal Server Error"})
 	}
 
@@ -66,7 +66,7 @@ func (h *handler) Update(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, &models.Response{Status: http.StatusBadRequest, Payload: "Bad json"})
 	}
 
-	if err := h.usecase.Update(models.RecordModel{RecordId: user.RecordId, UserId: user.UserId}, user.UserId); err != nil {
+	if err := h.usecase.Update(models.RecordModel{RecordId: user.RecordId, UserId: user.UserId}); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, &models.Response{Status: http.StatusInternalServerError, Payload: "Internal Server Error"})
 	}
 

@@ -15,11 +15,11 @@ func NewRepository() controller.RepositoryInterfaces {
 	return &repo{database: make(map[int]MockUsers)}
 }
 
-func (r *repo) Create(user models.User, id int) error {
+func (r *repo) Create(user models.User) error {
 	r.Lock()
 	defer r.Unlock()
 	u := MockUsers{user.Name, user.Surname, user.Username, user.Password}
-	r.database[id] = u
+	r.database[user.Id] = u
 	return nil
 }
 
@@ -34,14 +34,14 @@ func (r *repo) Read(id int) (models.User, error) {
 	return models.User{Name: value.Name, Surname: value.Surname, Username: value.Username, Password: "", Id: id}, nil
 }
 
-func (r *repo) Update(user models.User, id int) error {
+func (r *repo) Update(user models.User) error {
 	r.Lock()
 	defer r.Unlock()
-	_, ok := r.database[id]
+	_, ok := r.database[user.Id]
 	if !ok {
 		return nil
 	}
-	r.database[id] = MockUsers{Name: user.Name, Surname: user.Surname, Username: user.Username, Password: user.Password}
+	r.database[user.Id] = MockUsers{Name: user.Name, Surname: user.Surname, Username: user.Username, Password: user.Password}
 	return nil
 }
 

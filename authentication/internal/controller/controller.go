@@ -11,9 +11,9 @@ type controller struct {
 }
 
 type RepositoryInterfaces interface {
-	Create(models.User, int) error
+	Create(models.User) error
 	Read(int) (models.User, error)
-	Update(models.User, int) error
+	Update(models.User) error
 	Delete(int) error
 }
 
@@ -21,8 +21,8 @@ func NewUsecase(repo RepositoryInterfaces) handler.UsecaseInterfaces {
 	return &controller{repo: repo}
 }
 
-func (c *controller) Create(user models.User, id int) error {
-	err := c.repo.Create(user, id)
+func (c *controller) Create(user models.User) error {
+	err := c.repo.Create(user)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -39,8 +39,8 @@ func (c *controller) Read(id int) (models.User, error) {
 	return data, nil
 }
 
-func (c *controller) Update(user models.User, id int) error {
-	err := c.repo.Update(user, id)
+func (c *controller) Update(user models.User) error {
+	err := c.repo.Update(user)
 	if err != nil {
 		log.Println(err)
 		return err

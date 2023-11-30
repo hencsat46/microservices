@@ -4,6 +4,7 @@ import (
 	"microservices/libraryManager/internal/controller"
 	"microservices/libraryManager/internal/models"
 	"sync"
+	"time"
 )
 
 type repo struct {
@@ -15,12 +16,18 @@ func NewRepository() controller.RepositoryInterfaces {
 	return &repo{database: make(map[int]mockRecords)}
 }
 
-func (r *repo) Create(user models.RecordModel, id int) error {
+func (r *repo) Create(user models.RecordModel) error {
 	r.Lock()
 	defer r.Unlock()
 	u := mockRecords{UserId: user.UserId}
-	r.database[id] = u
+	r.database[user.UserId] = u
+	go r.autoDelete(5, user.UserId)
 	return nil
+}
+
+func (r *repo) autoDelete(delay time.Duration, id int) {
+	time.Sleep(time.Second * delay)
+	r.Delete(id)
 }
 
 func (r *repo) Read(id int) (models.RecordModel, error) {
@@ -34,14 +41,14 @@ func (r *repo) Read(id int) (models.RecordModel, error) {
 	return models.RecordModel{UserId: value.UserId, RecordId: id}, nil
 }
 
-func (r *repo) Update(user models.RecordModel, id int) error {
+func (r *repo) Update(user models.RecordModel) error {
 	r.Lock()
 	defer r.Unlock()
-	_, ok := r.database[id]
+	_, ok := r.database[user.UserId]
 	if !ok {
 		return nil
 	}
-	r.database[id] = mockRecords{UserId: user.UserId}
+	r.database[user.UserId] = mockRecords{UserId: user.UserId}
 	return nil
 }
 
