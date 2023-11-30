@@ -40,10 +40,9 @@ func (g *Gateway) GetUser(ctx context.Context, id int) (*models.RecordModel, err
 
 	if err := json.NewDecoder(response.Body).Decode(&user); err != nil {
 		log.Println(err)
-		return nil, nil
+		return nil, err
 	}
-	log.Println(user)
 
-	return nil, nil
+	return &models.RecordModel{UserId: int(user.Payload.(map[string]interface{})["Id"].(float64))}, nil
 
 }

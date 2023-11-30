@@ -46,11 +46,6 @@ func (h *handler) Create(ctx echo.Context) error {
 }
 
 func (h *handler) Read(ctx echo.Context) error {
-	var user = userDTO{"", "", "", "", -1}
-
-	if err := ctx.Bind(&user); err != nil {
-		return ctx.JSON(http.StatusBadRequest, &models.Response{Status: http.StatusBadRequest, Payload: "Bad json"})
-	}
 
 	value := ctx.QueryParam("id")
 	intValue, _ := strconv.Atoi(value)
