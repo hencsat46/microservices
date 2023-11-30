@@ -21,7 +21,7 @@ func (r *repo) Create(user models.RecordModel) error {
 	defer r.Unlock()
 	u := mockRecords{UserId: user.UserId}
 	r.database[user.UserId] = u
-	go r.autoDelete(5, user.UserId)
+	go r.autoDelete(30, user.UserId)
 	return nil
 }
 
