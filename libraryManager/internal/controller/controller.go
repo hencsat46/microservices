@@ -1,8 +1,12 @@
 package controller
 
 import (
+	"context"
 	"log"
+	"microservices/libraryManager/internal/gateway"
+	"microservices/libraryManager/internal/handler"
 	"microservices/libraryManager/internal/models"
+	"time"
 )
 
 type RepositoryInterfaces interface {
@@ -13,19 +17,26 @@ type RepositoryInterfaces interface {
 }
 
 type controller struct {
-	repo RepositoryInterfaces
+	repo    RepositoryInterfaces
+	gateway gateway.Gateway
 }
 
-func NewUsecase(repo RepositoryInterfaces) handler.UsecaseInterfaces {
-	return &controller{repo: repo}
+func NewUsecase(repo RepositoryInterfaces, gateway gateway.Gateway) handler.UsecaseInterfaces {
+	return &controller{repo: repo, gateway: gateway}
 }
 
 func (c *controller) Create(user models.RecordModel, id int) error {
-	err := c.repo.Create(user, id)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	c.gateway.GetUser(ctx, id)
+
+	// err := c.repo.Create(user, id)
+	// if err != nil {
+	// 	log.Println(err)
+	// 	return err
+	// }
+	// return nil
 	return nil
 }
 

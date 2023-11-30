@@ -3,6 +3,7 @@ package handler
 import (
 	"microservices/authentication/internal/models"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -51,7 +52,10 @@ func (h *handler) Read(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, &models.Response{Status: http.StatusBadRequest, Payload: "Bad json"})
 	}
 
-	response, err := h.usecase.Read(user.Id)
+	value := ctx.QueryParam("id")
+	intValue, _ := strconv.Atoi(value)
+
+	response, err := h.usecase.Read(intValue)
 
 	if err != nil {
 		return ctx.JSON(http.StatusInternalServerError, &models.Response{Status: http.StatusInternalServerError, Payload: "Internal Server Error"})

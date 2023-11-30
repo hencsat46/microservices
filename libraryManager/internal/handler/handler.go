@@ -37,7 +37,7 @@ func (h *handler) Create(ctx echo.Context) error {
 		return ctx.JSON(http.StatusBadRequest, &models.Response{Status: http.StatusBadRequest, Payload: "Bad json"})
 	}
 
-	if err := h.usecase.Create(models.RecordModel{UserId: user.UserId, RecordId: user.RecordId}, user.RecordId); err != nil {
+	if err := h.usecase.Create(models.RecordModel{UserId: user.UserId, RecordId: user.RecordId}, user.UserId); err != nil {
 		return ctx.JSON(http.StatusInternalServerError, &models.Response{Status: http.StatusInternalServerError, Payload: "Internal Server Error"})
 	}
 
